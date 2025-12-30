@@ -28,7 +28,12 @@ class GameViewModel{
     var selectedCondition: GameCondition = .win
     var currentScore = 0
     var showAlert: Bool = false
+    @ObservationIgnored
+    var message: String = ""
+    
+    @ObservationIgnored
     var totalTimerValue: Double = 5.0
+    
     var timerCountValue: Double = 5.0
     
     @ObservationIgnored
@@ -74,7 +79,10 @@ class GameViewModel{
     func handleGameOver(){
         self.timerCountValue = self.totalTimerValue
         self.stopTimer()
+        self.showAlert = true
+        self.message = "GAME OVER YOUR SCORE IS \(currentScore)"
         self.resetGame(clearScore: true)
+        
         
     }
     
@@ -132,6 +140,9 @@ class GameViewModel{
                     currentScore -= 1
                 }
             }
+        }
+        if currentScore < 0{
+            currentScore = 0
         }
         self.resetGame()
     }
