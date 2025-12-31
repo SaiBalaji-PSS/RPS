@@ -19,6 +19,8 @@ struct ContentView: View {
         NavigationStack{
             GeometryReader { reader in
                 ZStack{
+                    Color("FirstGradientColor")
+                        .ignoresSafeArea()
                     VStack(spacing:40){
                         
                         ZStack(alignment: .center) {
@@ -34,8 +36,9 @@ struct ContentView: View {
                         
                         VStack(alignment:.center){
                             Text("\(vm.selectedCondition.rawValue.uppercased()) THE GAME!")
-                                .font(.title)
-                                .bold()
+                                .foregroundStyle(.white)
+                                .font(.custom("Silkscreen", size: 38.0))
+                            
                             Divider()
                             HStack(spacing:10){
                                 ForEach(vm.images,id: \.self){ imageName in
@@ -46,9 +49,9 @@ struct ContentView: View {
                                             .resizable()
                                             .scaledToFit()
                                             .frame(width: reader.size.width / 3.5,height: 150)
-                                            .background(.yellow)
+                                           
                                             .clipShape(RoundedRectangle(cornerRadius: 20.0))
-                                            .overlay( RoundedRectangle(cornerRadius: 20.0).stroke(.black, lineWidth: 4.0))
+                                            .overlay( RoundedRectangle(cornerRadius: 20.0).stroke(.white, lineWidth: 4.0))
                                             .shadow(radius: 2.0)
                                     }
                                     
@@ -56,31 +59,41 @@ struct ContentView: View {
                                 }
                             }
                         }
-                        if vm.currentScore != 0{
-                            Text("Score: \(vm.currentScore)")
-                                .font(.title3)
-                                .fontWeight(.medium)
-                        }
-                        Button(action: {
-                            vm.resetGame(clearScore: true)
-                        }, label: {
-                            Text("Rest Game")
-                                .font(.title3)
-                                .bold()
-                                .padding()
-                                .frame(maxWidth: .infinity)
-                                .background(.green)
-                                .foregroundStyle(.white)
-                            
-                                .clipShape(RoundedRectangle(cornerRadius: 10.0))
-                                .overlay(RoundedRectangle(cornerRadius: 10.0).stroke(.black,lineWidth: 4.0))
-                                .padding(.horizontal)
-                        })
+                    
+                            VStack{
+                                
+                                Text("Streak: \(vm.currentStreak)")
+                                    .font(.custom("Silkscreen", size: 30))
+                                    .foregroundStyle(.white)
+                                    .fontWeight(.medium)
+                                Text("Score: \(vm.currentScore)")
+                                    .font(.custom("Silkscreen", size: 30))
+                                    .foregroundStyle(.white)
+                                    .fontWeight(.medium)
+                            }
+                        
+//                        Button(action: {
+//                            vm.resetGame(clearScore: true)
+//                        }, label: {
+//                            Text("Rest Game")
+//                                .font(.title3)
+//                                .bold()
+//                                .padding()
+//                                .frame(maxWidth: .infinity)
+//                                .background(.green)
+//                                .foregroundStyle(.white)
+//                            
+//                                .clipShape(RoundedRectangle(cornerRadius: 10.0))
+//                                .overlay(RoundedRectangle(cornerRadius: 10.0).stroke(.black,lineWidth: 4.0))
+//                                .padding(.horizontal)
+//                        })
                         Spacer()
                     }.padding(.top)
                     if vm.showAlert{
-                        CustomPopupView(shouldDisplayAlert: $vm.showAlert, title: "TEST", message: vm.message) {
+                        CustomPopupView(shouldDisplayAlert: $vm.showAlert, title: "GAME OVER", message: vm.message) {
+                            //play agian
                             vm.resetGame()
+                            vm.askNextQuestion()
                         } rightBtnClicked: {
                             
                         }
@@ -88,11 +101,17 @@ struct ContentView: View {
                 }
             }
            
-            .navigationTitle("Rock Paper Scissor")
+           
             .navigationBarTitleDisplayMode(.inline)
         }
         .onAppear {
-            vm.resetGame()
+            for family in UIFont.familyNames.sorted() {
+                print("Family: \(family)")
+                for name in UIFont.fontNames(forFamilyName: family) {
+                    print(" - \(name)")
+                }
+            }
+            vm.askNextQuestion()
         }
     }
     

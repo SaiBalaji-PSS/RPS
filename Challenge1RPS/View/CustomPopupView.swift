@@ -16,50 +16,59 @@ struct CustomPopupView: View {
     var rightBtnClicked: () -> (Void)
     var body: some View {
         ZStack{
-            Color(.black.opacity(0.45))
+            Color("FirstGradientColor")
                 .ignoresSafeArea()
-            VStack(alignment:.center,spacing:8){
+            VStack(alignment:.center,spacing:18){
                 Text(title)
-                    .font(.largeTitle)
-                    .bold()
+                    .foregroundStyle(.white)
+                    .font(.custom("Silkscreen", size: 30))
+                    .fontWeight(.light)
+                
                 Text(message)
-                    .font(.title)
+                    .foregroundStyle(.white)
+                    .font(.custom("Silkscreen", size: 24))
                     .multilineTextAlignment(.center)
+                
                 HStack{
                     Button {
                         self.shouldDisplayAlert.toggle()
                         leftBtnClicked()
                     } label: {
                         Text("PLAY AGAIN")
-                            .bold()
+                            .font(.custom("Silkscreen", size: 18))
+                            .fontWeight(.light)
                             .foregroundStyle(.white)
                             .padding()
                    
-                            .background(.pink)
+                            .background(.black)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
+                    Divider()
+                        .frame(width: 2)
+                        .background(.white)
+                    
                     Button {
                         rightBtnClicked()
                     } label: {
                         Text("MAIN MENU")
-                            .bold()
+                            .font(.custom("Silkscreen", size: 18))
                             .foregroundStyle(.white)
                             .padding()
-                            .background(.cyan)
+                            .background(.black)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
 
                     
                     
-                }.padding(.horizontal)
+                }.frame(height:50).border(.white)
                 
-            }.padding().background(.white).padding()
+            }.padding().background(Color("FirstGradientColor"))
         }
     }
 }
 
 #Preview {
-    CustomPopupView(shouldDisplayAlert: .constant(true),title: "YOU WIN !",message: "YOUR SCORE IS 5") {
+    CustomPopupView(shouldDisplayAlert: .constant(true),title: "YOU WIN !",message: "SCORE - 5 \n STREAK - 10 \n TOTAL SCORE - 50") {
         
     } rightBtnClicked: {
         

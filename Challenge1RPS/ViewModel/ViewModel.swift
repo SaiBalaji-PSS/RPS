@@ -14,9 +14,9 @@ class GameViewModel{
         case loose = "LOOSE"
     }
     enum InputStates: String{
-        case rock = "ROCK"
-        case paper = "PAPER"
-        case scissor = "SCISSOR"
+        case rock = "ROCK 1"
+        case paper = "PAPER 1"
+        case scissor = "SCISSOR 1"
     }
     
     @ObservationIgnored
@@ -26,7 +26,11 @@ class GameViewModel{
     
     var selectedQuestion: InputStates = .rock
     var selectedCondition: GameCondition = .win
+    
+    var currentStreak = 0
     var currentScore = 0
+
+    
     var showAlert: Bool = false
     @ObservationIgnored
     var message: String = ""
@@ -43,17 +47,11 @@ class GameViewModel{
         timerCountValue = totalTimerValue
     }
     
-    func resetGame(clearScore: Bool = false){
-        selectedQuestion = images.randomElement() ?? .rock
-        selectedCondition = conditions.randomElement() ?? .win
-        if clearScore{
-            currentScore = 0
-        }
-        else{
-            self.stopTimer()
-            self.startTimer()
-        }
-    }
+   
+    
+  
+    
+   
     
     func startTimer(){
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: { _ in
@@ -65,7 +63,7 @@ class GameViewModel{
                 
             }
             else{
-                self.timerCountValue -= 1
+                self.timerCountValue -= 1.0
             }
         })
     }
@@ -76,75 +74,99 @@ class GameViewModel{
         timer = nil
     }
     
+    func askNextQuestion(){
+        print("CURRENT SCORE IS \(currentScore)")
+        selectedQuestion = images.randomElement() ?? .rock
+        selectedCondition = conditions.randomElement() ?? .win
+        self.stopTimer()
+        self.startTimer()
+    }
+    
+    
     func handleGameOver(){
+        self.showAlert = true
+        self.message = "SCORE - \(currentScore) \n STREAK - \(currentStreak) \n TOTAL SCORE - \(currentScore * currentStreak)"
+        self.resetGame()
+    }
+    
+    func resetGame(){
+        selectedQuestion = images.randomElement() ?? .rock
+        selectedCondition = conditions.randomElement() ?? .win
+        currentScore = 0
+        currentStreak = 0
         self.timerCountValue = self.totalTimerValue
         self.stopTimer()
-        self.showAlert = true
-        self.message = "GAME OVER YOUR SCORE IS \(currentScore)"
-        self.resetGame(clearScore: true)
-        
-        
     }
     
     func validateUserInput(input: InputStates){
         if selectedQuestion == .rock{
             if selectedCondition == .win{
                 if input == .paper{
+                    currentStreak += 1
                     currentScore += 1
+                  
                 }
                 else{
-                    currentScore -= 1
+                    currentStreak = 0
                 }
             }
             else{
                 if input == .scissor{
+                    currentStreak += 1
                     currentScore += 1
+                   
                 }
                 else{
-                    currentScore  -= 1
+                    currentStreak  = 0
                 }
             }
         }
         else if selectedQuestion == .paper{
             if selectedCondition == .win{
                 if input == .scissor{
+                    currentStreak = 1
                     currentScore += 1
+                   
                 }
                 else{
-                    currentScore -= 1
+                    currentStreak = 0
                 }
             }
             else{
                 if input == .rock{
+                    currentStreak += 1
                     currentScore += 1
+                   
                 }
                 else{
-                    currentScore -= 1
+                    currentStreak = 0
                 }
             }
         }
         else if selectedQuestion == .scissor{
             if selectedCondition == .win{
                 if input == .rock{
+                    currentStreak += 1
                     currentScore += 1
+                   
                 }
                 else{
-                    currentScore -= 1
+                    currentStreak  = 0
                 }
             }
             else{
                 if input == .paper{
+                    currentStreak += 1
                     currentScore += 1
+                   
                 }
                 else{
-                    currentScore -= 1
+                    currentStreak = 0
                 }
             }
         }
-        if currentScore < 0{
-            currentScore = 0
-        }
-        self.resetGame()
+        
+        self.askNextQuestion()
     }
     
 }

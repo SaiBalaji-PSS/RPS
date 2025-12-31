@@ -12,10 +12,10 @@ struct CirrcularProgressView: View {
     var body: some View {
         ZStack{
             Circle()
-                .stroke(Color.pink.opacity(0.50),lineWidth: 40.0)
+                .stroke(Color.black,lineWidth: 20.0)
             Circle()
                 .trim(from: 0,to: progress)
-                .stroke(Color.pink,lineWidth: 20.0)
+                .stroke(Color.white,lineWidth: 20.0)
                 .rotationEffect(.degrees(270))
                 .animation(.bouncy, value: progress)
         }
