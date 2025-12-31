@@ -33,8 +33,13 @@ class GameViewModel{
     
     var showAlert: Bool = false
     @ObservationIgnored
+    var alertTitle: String = ""
+    @ObservationIgnored
     var message: String = ""
-    
+    @ObservationIgnored
+    var leftBtnMessage: String = ""
+    @ObservationIgnored
+    var rightBtnMessage: String = ""
     @ObservationIgnored
     var totalTimerValue: Double = 5.0
     
@@ -42,6 +47,9 @@ class GameViewModel{
     
     @ObservationIgnored
     var timer: Timer?
+    
+    @ObservationIgnored
+    var isGamePaused: Bool = false
     
     init(){
         timerCountValue = totalTimerValue
@@ -85,7 +93,10 @@ class GameViewModel{
     
     func handleGameOver(){
         self.showAlert = true
+        self.alertTitle = "GAME OVER"
         self.message = "SCORE - \(currentScore) \n STREAK - \(currentStreak) \n TOTAL SCORE - \(currentScore * currentStreak)"
+        self.leftBtnMessage = "PLAY AGAIN"
+        self.rightBtnMessage = "MAIN MENU"
         self.resetGame()
     }
     
@@ -96,7 +107,25 @@ class GameViewModel{
         currentStreak = 0
         self.timerCountValue = self.totalTimerValue
         self.stopTimer()
+        self.showAlert = false
+        self.isGamePaused = false 
     }
+    
+    func pauseGame(){
+        self.alertTitle = "GAME PAUSED"
+        self.message = ""
+        self.leftBtnMessage = "RESUME"
+        self.rightBtnMessage = "MAIN MENU"
+        self.showAlert = true
+        self.stopTimer()
+        self.isGamePaused = true
+    }
+    func resumeGame(){
+        self.isGamePaused = false
+        self.showAlert = false
+        self.askNextQuestion()
+    }
+    
     
     func validateUserInput(input: InputStates){
         if selectedQuestion == .rock{

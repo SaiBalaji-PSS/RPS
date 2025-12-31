@@ -9,20 +9,30 @@ import SwiftUI
 
 
 
+enum GameMode{
+    case scoreAttack
+    case practice
+}
 
 
-struct ContentView: View {
-   
+struct GameView: View {
+    
+    @Environment(\.dismiss) var dismiss
     @State var vm: GameViewModel = GameViewModel()
     
     var body: some View {
-        NavigationStack{
+        
             GeometryReader { reader in
                 ZStack{
-                    Color("FirstGradientColor")
+                    Color("MainBackgroundColor")
                         .ignoresSafeArea()
                     VStack(spacing:40){
-                        
+                        HStack{
+                            Spacer()
+                            CustomButton(buttonTitle: vm.isGamePaused ? "RESUME" : "PAUSE") {
+                                self.vm.pauseGame()
+                            }
+                        }.padding(.horizontal)
                         ZStack(alignment: .center) {
                             CirrcularProgressView(progress: .constant(Double(vm.timerCountValue / vm.totalTimerValue)))
                                 .frame(width: reader.size.width,height: 250)
@@ -72,38 +82,33 @@ struct ContentView: View {
                                     .fontWeight(.medium)
                             }
                         
-//                        Button(action: {
-//                            vm.resetGame(clearScore: true)
-//                        }, label: {
-//                            Text("Rest Game")
-//                                .font(.title3)
-//                                .bold()
-//                                .padding()
-//                                .frame(maxWidth: .infinity)
-//                                .background(.green)
-//                                .foregroundStyle(.white)
-//                            
-//                                .clipShape(RoundedRectangle(cornerRadius: 10.0))
-//                                .overlay(RoundedRectangle(cornerRadius: 10.0).stroke(.black,lineWidth: 4.0))
-//                                .padding(.horizontal)
-//                        })
+
                         Spacer()
                     }.padding(.top)
                     if vm.showAlert{
-                        CustomPopupView(shouldDisplayAlert: $vm.showAlert, title: "GAME OVER", message: vm.message) {
-                            //play agian
-                            vm.resetGame()
-                            vm.askNextQuestion()
+                        CustomPopupView(shouldDisplayAlert: $vm.showAlert, title: vm.alertTitle, message: vm.message,leftBtnTitle:vm.leftBtnMessage,rightBtnTitle: vm.rightBtnMessage) {
+                            //play agian // resume
+                            if vm.leftBtnMessage == "RESUME"{
+                                vm.resumeGame()
+                            }
+                            else if vm.leftBtnMessage == "PLAY AGAIN"{
+                                vm.resetGame()
+                            }
+                           
+                           
                         } rightBtnClicked: {
-                            
+                            //main menu
+                            vm.resetGame()
+                            dismiss()
                         }
                     }
                 }
+                .navigationBarBackButtonHidden()
             }
            
            
             .navigationBarTitleDisplayMode(.inline)
-        }
+        
         .onAppear {
             for family in UIFont.familyNames.sorted() {
                 print("Family: \(family)")
@@ -118,5 +123,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    GameView()
 }
