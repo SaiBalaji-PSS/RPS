@@ -29,12 +29,14 @@ struct MainMenuView: View {
                         
                     }
                     CustomButton(buttonTitle: "LEADER BOARD") {
-                        
+                        GameKitManager.shared.showLeaderBoards()
                     }
                     
                     
                 }
             }
+        }.onAppear {
+            GameKitManager.shared.authenticate()
         }
        
     }

@@ -28,10 +28,10 @@ struct GameView: View {
                         .ignoresSafeArea()
                     VStack(spacing:40){
                         HStack{
-                            Spacer()
                             CustomButton(buttonTitle: vm.isGamePaused ? "RESUME" : "PAUSE") {
                                 self.vm.pauseGame()
                             }
+                            Spacer()
                         }.padding(.horizontal)
                         ZStack(alignment: .center) {
                             CirrcularProgressView(progress: .constant(Double(vm.timerCountValue / vm.totalTimerValue)))
@@ -92,7 +92,8 @@ struct GameView: View {
                                 vm.resumeGame()
                             }
                             else if vm.leftBtnMessage == "PLAY AGAIN"{
-                                vm.resetGame()
+                                vm.restartGame()
+                                GameKitManager.shared.submitScore(score: vm.currentScore)
                             }
                            
                            

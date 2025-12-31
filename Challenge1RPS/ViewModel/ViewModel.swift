@@ -97,7 +97,7 @@ class GameViewModel{
         self.message = "SCORE - \(currentScore) \n STREAK - \(currentStreak) \n TOTAL SCORE - \(currentScore * currentStreak)"
         self.leftBtnMessage = "PLAY AGAIN"
         self.rightBtnMessage = "MAIN MENU"
-        self.resetGame()
+        
     }
     
     func resetGame(){
@@ -109,6 +109,11 @@ class GameViewModel{
         self.stopTimer()
         self.showAlert = false
         self.isGamePaused = false 
+    }
+    
+    func restartGame(){
+        self.resetGame()
+        self.askNextQuestion()
     }
     
     func pauseGame(){
