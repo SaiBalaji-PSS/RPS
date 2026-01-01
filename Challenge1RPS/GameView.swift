@@ -63,7 +63,7 @@ struct GameView: View {
                                             .clipShape(RoundedRectangle(cornerRadius: 20.0))
                                             .overlay( RoundedRectangle(cornerRadius: 20.0).stroke(.white, lineWidth: 4.0))
                                             .shadow(radius: 2.0)
-                                    }
+                                    }.sensoryFeedback(.success, trigger: vm.currentScore)
                                     
                                     
                                 }
